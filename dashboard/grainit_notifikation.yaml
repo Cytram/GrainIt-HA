@@ -1,0 +1,18 @@
+# Optional: push notification for every new load.
+# Settings → Automations → Create automation → ⋮ → Edit in YAML, paste, and
+# replace notify.mobile_app_din_telefon with your own phone's notify service.
+
+alias: Grainit - nyt læs
+description: Besked når der registreres et nyt læs gylle i Grainit
+triggers:
+  - trigger: event
+    event_type: grainit_new_load
+actions:
+  - action: notify.mobile_app_din_telefon
+    data:
+      title: >-
+        {{ trigger.event.data.product }} {{ trigger.event.data.direction }}
+      message: >-
+        {{ trigger.event.data.tonnes }} t · {{ trigger.event.data.driver }} ·
+        {{ as_timestamp(trigger.event.data.time) | timestamp_custom('%H:%M') }}
+mode: queued

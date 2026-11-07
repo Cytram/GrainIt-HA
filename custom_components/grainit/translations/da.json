@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Grainit",
+        "description": "Log ind med din Grainit-konto.",
+        "data": { "email": "E-mail", "password": "Adgangskode" }
+      },
+      "reauth_confirm": {
+        "title": "Grainit",
+        "description": "Indtast din nye Grainit-adgangskode.",
+        "data": { "password": "Adgangskode" }
+      }
+    },
+    "error": {
+      "invalid_auth": "Forkert e-mail eller adgangskode.",
+      "cannot_connect": "Kunne ikke få forbindelse til Grainit."
+    },
+    "abort": {
+      "already_configured": "Denne konto er allerede sat op.",
+      "reauth_successful": "Adgangskoden er opdateret."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": { "scan_interval": "Opdateringsinterval (minutter)" }
+      }
+    }
+  }
+}

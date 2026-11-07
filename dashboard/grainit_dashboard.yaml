@@ -1,0 +1,145 @@
+# Grainit dashboard for Home Assistant (built-in cards only, no HACS needed)
+#
+# Settings → Dashboards → Add dashboard → "New dashboard from scratch",
+# name it "Gylle". Open it → ⋮ → Edit dashboard → ⋮ → Raw configuration editor,
+# replace everything with this file and save.
+
+title: Gylle
+views:
+  - title: Gylle
+    path: gylle
+    icon: mdi:truck
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: I dag
+            icon: mdi:calendar-today
+          - type: tile
+            entity: sensor.grainit_raagylle_kvaeg_ud_i_dag
+            name: Rågylle ud
+            icon: mdi:arrow-up-bold
+            color: red
+          - type: tile
+            entity: sensor.grainit_afgasset_gylle_ind_i_dag
+            name: Afgasset ind
+            icon: mdi:arrow-down-bold
+            color: grey
+          - type: tile
+            entity: sensor.grainit_dybstroeelse_ud_i_dag
+            name: Dybstrøelse ud
+            icon: mdi:arrow-up-bold
+            color: teal
+          - type: tile
+            entity: sensor.grainit_laes_i_dag
+            name: Læs i dag
+          - type: tile
+            entity: sensor.grainit_seneste_laes
+            name: Seneste læs
+            state_content:
+              - last_changed
+              - produkt
+              - ton
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Denne måned
+            icon: mdi:calendar-month
+          - type: tile
+            entity: sensor.grainit_raagylle_kvaeg_ud_denne_maaned
+            name: Rågylle ud
+            color: red
+          - type: tile
+            entity: sensor.grainit_afgasset_gylle_ind_denne_maaned
+            name: Afgasset ind
+            color: grey
+          - type: tile
+            entity: sensor.grainit_dybstroeelse_ud_denne_maaned
+            name: Dybstrøelse ud
+            color: teal
+          - type: tile
+            entity: sensor.grainit_laes_denne_maaned
+            name: Læs denne måned
+          - type: heading
+            heading: Gødningsår (fra 1. august)
+            icon: mdi:calendar-range
+          - type: tile
+            entity: sensor.grainit_raagylle_kvaeg_ud_goedningsaar
+            name: Rågylle ud
+            color: red
+          - type: tile
+            entity: sensor.grainit_afgasset_gylle_ind_goedningsaar
+            name: Afgasset ind
+            color: grey
+          - type: tile
+            entity: sensor.grainit_dybstroeelse_ud_goedningsaar
+            name: Dybstrøelse ud
+            color: teal
+
+      - type: grid
+        column_span: 3
+        cards:
+          - type: heading
+            heading: Tons pr. dag (seneste 30 dage)
+            icon: mdi:chart-bar
+          - type: statistics-graph
+            chart_type: bar
+            period: day
+            days_to_show: 30
+            stat_types:
+              - change
+            entities:
+              - entity: grainit:raagylle_kvaeg_ud
+                name: Rågylle ud
+              - entity: grainit:afgasset_gylle_ind
+                name: Afgasset ind
+              - entity: grainit:dybstroeelse_ud
+                name: Dybstrøelse ud
+            grid_options:
+              columns: full
+
+      - type: grid
+        column_span: 3
+        cards:
+          - type: heading
+            heading: Tons pr. måned (seneste 2 år)
+            icon: mdi:chart-bar-stacked
+          - type: statistics-graph
+            chart_type: bar
+            period: month
+            days_to_show: 730
+            stat_types:
+              - change
+            entities:
+              - entity: grainit:raagylle_kvaeg_ud
+                name: Rågylle ud
+              - entity: grainit:afgasset_gylle_ind
+                name: Afgasset ind
+              - entity: grainit:dybstroeelse_ud
+                name: Dybstrøelse ud
+            grid_options:
+              columns: full
+
+      - type: grid
+        column_span: 3
+        cards:
+          - type: heading
+            heading: Seneste læs
+            icon: mdi:format-list-bulleted
+          - type: markdown
+            grid_options:
+              columns: full
+            content: |-
+              {% set laes = state_attr('sensor.grainit_seneste_laes', 'laes') or [] %}
+              {% if laes | count == 0 %}
+              Ingen læs i dette gødningsår endnu.
+              {% else %}
+              | Tid | Produkt | | Ton | Chauffør |
+              |:--|:--|:-:|--:|:--|
+              {% for l in laes -%}
+              | {{ as_timestamp(l.tid) | timestamp_custom('%d-%m %H:%M') }} | {{ l.produkt }} | {{ '⬆️' if l.retning == 'ud' else '⬇️' }} | {{ '%.1f' | format(l.ton) }} | {{ l.chauffoer }} |
+              {% endfor %}
+              {% endif %}

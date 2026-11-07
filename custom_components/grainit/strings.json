@@ -1,0 +1,31 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Grainit",
+        "description": "Log in with your Grainit account.",
+        "data": { "email": "Email", "password": "Password" }
+      },
+      "reauth_confirm": {
+        "title": "Grainit",
+        "description": "Enter your new Grainit password.",
+        "data": { "password": "Password" }
+      }
+    },
+    "error": {
+      "invalid_auth": "Wrong email or password.",
+      "cannot_connect": "Could not reach Grainit."
+    },
+    "abort": {
+      "already_configured": "This account is already set up.",
+      "reauth_successful": "Password updated."
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "data": { "scan_interval": "Update interval (minutes)" }
+      }
+    }
+  }
+}
